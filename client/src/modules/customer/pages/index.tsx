@@ -1,0 +1,1 @@
+export { CustomerRootPage } from './Root.page';
