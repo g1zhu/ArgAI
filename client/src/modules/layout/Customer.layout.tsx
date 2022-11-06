@@ -90,7 +90,8 @@ export const CustomerLayout = (props: {
             label: `nav ${index + 1}`,
           }))}
           onClick={(info) => {
-            console.log(info);
+            console.log("info", info)
+            // navigate("/solution")
           }}
         />
       </Header>
