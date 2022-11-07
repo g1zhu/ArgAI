@@ -12,8 +12,10 @@ import { Header, Content, Footer } from "antd/lib/layout/layout";
 import loginBackground from "../../images/background.jpeg";
 import { useState } from "react";
 import moment from "moment";
+import { HeatMapOutlined, HomeOutlined, SolutionOutlined } from "@ant-design/icons";
 
 const iconStyles: CSSProperties = {
+  minHeight: "600",
   backgroundImage: `url('${loginBackground}'), linear-gradient(119.47deg, #091225 0%, rgba(9, 18, 37, 0.91) 31.16%, rgba(21, 32, 55, 0.97) 73.75%, #152037 99.72%)`,
   backgroundRepeat: "no-repeat",
   backgroundPosition: "50% 0%",
@@ -27,81 +29,19 @@ const iconStyles: CSSProperties = {
 const menu = [
   {
     key: "/dashboard",
-    label: "Dashboard",
+    label: "Home",
+    icon: <HomeOutlined />,
   },
   {
     key: "/map",
     label: "World Map",
+    icon: <HeatMapOutlined />,
   },
   {
     key: "/solution",
     label: "Solution",
+    icon: <SolutionOutlined />,
   },
-
-  // {
-  //   path: '',
-  //   name: 'Manage',
-  //   routes: [
-  //     {
-  //       path: '/devices',
-  //       name: 'Manage Devices',
-  //     },
-  //     {
-  //       path: '/users',
-  //       name: 'Manage Users',
-  //     },
-  //     {
-  //       path: '/projects',
-  //       name: 'Manage Projects',
-  //     },
-  //     {
-  //       path: '/printers',
-  //       name: 'Manage Printers',
-  //     },
-  //     {
-  //       path: '/settings',
-  //       name: 'Manage Organization',
-  //     },
-  //   ],
-  // },
-];
-
-const promenu = [
-  {
-    path: "/dashboard",
-    name: "Dashboard",
-  },
-  {
-    path: "/map",
-    name: "Map",
-  },
-
-  // {
-  //   path: '',
-  //   name: 'Manage',
-  //   routes: [
-  //     {
-  //       path: '/devices',
-  //       name: 'Manage Devices',
-  //     },
-  //     {
-  //       path: '/users',
-  //       name: 'Manage Users',
-  //     },
-  //     {
-  //       path: '/projects',
-  //       name: 'Manage Projects',
-  //     },
-  //     {
-  //       path: '/printers',
-  //       name: 'Manage Printers',
-  //     },
-  //     {
-  //       path: '/settings',
-  //       name: 'Manage Organization',
-  //     },
-  //   ],
-  // },
 ];
 
 export const CustomerLayout = (props: {
@@ -126,16 +66,9 @@ export const CustomerLayout = (props: {
           mode="horizontal"
           items={menu}
           onClick={({ key }) => {
-            console.log("key", key);
-            // setPage(info.key);
+            console.log("key", key);   
             navigate(key);
-            // setPage(key);
           }}
-          // onSelect={(info) => {
-          //   navigate(info.key);
-          //   setPage(info.key);
-          //   console.log("select", info);
-          // }}
         />
       </Header>
       <Content
@@ -143,6 +76,7 @@ export const CustomerLayout = (props: {
         style={{
           padding: "0 0",
           marginTop: 64,
+          "minHeight": "600px",
         }}
       >
         {props.children}
@@ -154,8 +88,6 @@ export const CustomerLayout = (props: {
       </Footer>
     </Layout>
   );
-
-  // return <Navigate to="/" replace state={{ from: location }} />;
 };
 
 export function withCustomerLayout(WrappedComponent: React.FC) {

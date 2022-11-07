@@ -29,8 +29,8 @@ def process():
     # access image file 
     file = request.files['file']
     
-    # access user input
-    # word = request.form.get("word")
+    # access user inputs, for example
+    deficit = request.form.get("disturbance_nutrient_deficit")
     
     
     # model 1
@@ -57,7 +57,7 @@ def process():
     
     #model 4
     
-    return jsonify(result1 = result1, status = 200)
+    return jsonify(result1 = result1, status = 200, ))
   else:
     return jsonify(result = "something wrong", status = 500)
 

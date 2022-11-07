@@ -1,6 +1,5 @@
-import { Layout, Space } from "antd";
-import { Header, Content, Footer } from "antd/lib/layout/layout";
-import moment from "moment";
+import { Layout, Typography } from "antd";
+import { Header, Content } from "antd/lib/layout/layout";
 import { useState } from "react";
 import ReactTooltip from "react-tooltip";
 import { withCustomerLayout } from "../../../layout/Customer.layout";
@@ -19,18 +18,13 @@ const Map = () => {
         }}
       >
         <div>
-          <MapChart setTooltipContent={setContent} />
+          <Typography.Title>World CPI Inflation Heat Map</Typography.Title>
+          <MapChart setTooltipContent={setContent}/>
           <ReactTooltip multiline={true} html={true}>
             {content}
           </ReactTooltip>
         </div>
-        <Space></Space>
       </Content>
-      {/* <Footer
-        style={{ textAlign: "center", background: "none" }}
-      >
-        ©ArgAI Group. All rights reserved {moment().year()}.
-      </Footer> */}
     </Layout>
   );
 };

@@ -31,7 +31,7 @@ const MapChart = ({
   // console.log(131 - count)
 
   return (
-    <div data-tip="">
+    <div data-tip="" style={{ "marginTop": "-8rem"}}>
       <ComposableMap
         projectionConfig={{
           rotate: [-10, 0, 0],
@@ -68,12 +68,13 @@ const MapChart = ({
                         : "#F5F4F6"
                     }
                     onMouseEnter={() => {
-                      setTooltipContent(
-                        `country: ${d.Country}  <br />
+                      d &&
+                        setTooltipContent(
+                          `country: ${d.Country}  <br />
                           CPI inflation: ${
                             Math.round(Number(d["food avg"]) * 10) / 10
                           }`
-                      );
+                        );
                     }}
                     onMouseLeave={() => {
                       setTooltipContent("");
