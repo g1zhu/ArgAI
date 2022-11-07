@@ -57,7 +57,7 @@ def process():
     
     #model 4
     
-    return jsonify(result1 = result1, status = 200, ))
+    return jsonify(result1 = result1, status = 200 )
   else:
     return jsonify(result = "something wrong", status = 500)
 
