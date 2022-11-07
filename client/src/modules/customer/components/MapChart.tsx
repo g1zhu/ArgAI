@@ -1,11 +1,10 @@
-import React, { useEffect, useState, useMemo, memo } from "react";
+import React, { useEffect, useState, memo } from "react";
 import { csv } from "d3-fetch";
 import { scaleLinear } from "d3-scale";
 import {
   ComposableMap,
   Geographies,
   Geography,
-  ZoomableGroup,
   Sphere,
   Graticule,
 } from "react-simple-maps";
@@ -29,7 +28,7 @@ const MapChart = ({
     });
   }, []);
 
-  console.log(131 - count)
+  // console.log(131 - count)
 
   return (
     <div data-tip="">
@@ -55,7 +54,7 @@ const MapChart = ({
                 });
 
                 if (!d) {
-                  console.log(geo.properties.name);
+                  // console.log(geo.properties.name);
                 } else {
                   setCount(count + 1);
                 }

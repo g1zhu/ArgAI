@@ -1,25 +1,9 @@
-import ProLayout, { PageContainer } from "@ant-design/pro-layout";
 import { CSSProperties, useEffect, useState } from "react";
 import { withCustomerLayout } from "../../../layout/Customer.layout";
-import {
-  Row,
-  Layout,
-  Form,
-  Button,
-  Card,
-  Col,
-  Space,
-  Upload,
-  Typography,
-} from "antd";
-import ReactTooltip from "react-tooltip";
+import { Button, Layout } from "antd";
 import "antd/dist/antd.css";
-import loginBackground from "../../../../images/background.jpeg";
 import moment from "moment";
-import { PlusCircleOutlined, UploadOutlined } from "@ant-design/icons";
 import type { RcFile, UploadFile, UploadProps } from "antd/es/upload/interface";
-import { useProcessImageQuery } from "../../query/index";
-import MapChart from "../../components/MapChart";
 
 // import "./index.css";
 // import menu from "antd/lib/menu";
@@ -30,7 +14,6 @@ const Dashboard = () => {
   const [ok, setok] = useState<boolean>(false);
   const [reponse, setResponse] = useState<any>();
   const [isloading, setloading] = useState<boolean>(false);
-  const [content, setContent] = useState("");
 
   const [selectedImg, setImage] = useState<
     string | ArrayBuffer | null | undefined
@@ -81,55 +64,16 @@ const Dashboard = () => {
   }, [ok, reponse, selectedImgFile]);
 
   return (
-    <Layout>
-      <Header style={{ background: "none" }}></Header>
-      <Content style={{ flex: "unset", margin: "auto 0" }}>
-        <div>
-          <MapChart setTooltipContent={setContent} />
-          <ReactTooltip multiline={true} html={true}>
-            {content}
-          </ReactTooltip>
-        </div>
-        <Card style={{ background: "none" }}>
-          <Row gutter={[24, 24]}>
-            <Col
-              span={6}
-              offset={1}
-              style={{ justifyContent: "center", paddingTop: "2rem" }}
-            >
-              <Space direction="vertical">
-                <Upload {...props} listType="picture">
-                  <Button icon={<UploadOutlined />}>Upload Image</Button>
-                </Upload>
-                <Button
-                  type="primary"
-                  onClick={handleSubmit}
-                  disabled={isloading ? true : false}
-                  loading={isloading}
-                  style={{
-                    marginTop: 0,
-                    justifyContent: "center",
-                    marginLeft: "4rem",
-                  }}
-                >
-                  submit
-                </Button>
-              </Space>
-            </Col>
-          </Row>
-          {reponse && (
-            <Row>
-              <Typography>{reponse.result}</Typography>
-            </Row>
-          )}
-        </Card>
-      </Content>
-      <Footer
-        style={{ textAlign: "center", background: "none", color: "#fff" }}
-      >
-        ©ArgAI Group. All rights reserved {moment().year()}.
-      </Footer>
-    </Layout>
+    // <Layout style={{ background: "none" }}>
+    //   <Header></Header>
+    //   <Content style={{ flex: "unset", margin: "auto 0" }}></Content>
+    //   {/* <Footer
+    //     style={{ textAlign: "center", background: "none", color: "#fff" }}
+    //   >
+    //     ©ArgAI Group. All rights reserved {moment().year()}.
+    //   </Footer> */}
+    // </Layout>
+    <Button>click</Button>
   );
 };
 

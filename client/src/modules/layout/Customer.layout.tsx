@@ -5,11 +5,13 @@ import {
   ReactFragment,
   ReactPortal,
 } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { Layout, Menu } from "antd";
-import { PageContainer } from "@ant-design/pro-layout";
+import ProLayout, { PageContainer } from "@ant-design/pro-layout";
 import { Header, Content, Footer } from "antd/lib/layout/layout";
 import loginBackground from "../../images/background.jpeg";
+import { useState } from "react";
+import moment from "moment";
 
 const iconStyles: CSSProperties = {
   backgroundImage: `url('${loginBackground}'), linear-gradient(119.47deg, #091225 0%, rgba(9, 18, 37, 0.91) 31.16%, rgba(21, 32, 55, 0.97) 73.75%, #152037 99.72%)`,
@@ -18,25 +20,62 @@ const iconStyles: CSSProperties = {
   padding: "0 0%",
   color: "#fff",
   textAlign: "center",
+  // display: 'flex',
+  // flexDirection: 'column',
 };
 
 const menu = [
   {
-    path: "/",
-    name: "Dashboard",
+    key: "/dashboard",
+    label: "Dashboard",
   },
+  {
+    key: "/map",
+    label: "World Map",
+  },
+  {
+    key: "/solution",
+    label: "Solution",
+  },
+
+  // {
+  //   path: '',
+  //   name: 'Manage',
+  //   routes: [
+  //     {
+  //       path: '/devices',
+  //       name: 'Manage Devices',
+  //     },
+  //     {
+  //       path: '/users',
+  //       name: 'Manage Users',
+  //     },
+  //     {
+  //       path: '/projects',
+  //       name: 'Manage Projects',
+  //     },
+  //     {
+  //       path: '/printers',
+  //       name: 'Manage Printers',
+  //     },
+  //     {
+  //       path: '/settings',
+  //       name: 'Manage Organization',
+  //     },
+  //   ],
+  // },
+];
+
+const promenu = [
   {
     path: "/dashboard",
     name: "Dashboard",
   },
   {
-    path: "/solution",
-    name: "Solution",
+    path: "/map",
+    name: "Map",
   },
-  {
-    path: "/resource",
-    name: "Resource",
-  },
+
   // {
   //   path: '',
   //   name: 'Manage',
@@ -76,6 +115,7 @@ export const CustomerLayout = (props: {
 }) => {
   let location = useLocation();
   const navigate = useNavigate();
+  const [page, setPage] = useState<string>("");
 
   return (
     <Layout style={iconStyles}>
@@ -84,15 +124,18 @@ export const CustomerLayout = (props: {
         <Menu
           theme="dark"
           mode="horizontal"
-          defaultSelectedKeys={["1"]}
-          items={new Array(3).fill(null).map((_, index) => ({
-            key: String(index + 1),
-            label: `nav ${index + 1}`,
-          }))}
-          onClick={(info) => {
-            console.log("info", info)
-            // navigate("/solution")
+          items={menu}
+          onClick={({ key }) => {
+            console.log("key", key);
+            // setPage(info.key);
+            navigate(key);
+            // setPage(key);
           }}
+          // onSelect={(info) => {
+          //   navigate(info.key);
+          //   setPage(info.key);
+          //   console.log("select", info);
+          // }}
         />
       </Header>
       <Content
@@ -104,6 +147,11 @@ export const CustomerLayout = (props: {
       >
         {props.children}
       </Content>
+      <Footer
+        style={{ textAlign: "center", background: "none", color: "#fff" }}
+      >
+        ©ArgAI Group. All rights reserved {moment().year()}.
+      </Footer>
     </Layout>
   );
 

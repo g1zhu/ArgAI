@@ -23,10 +23,19 @@ def index():
 
 @app.route("/process", methods=['POST'])
 def process():
+  
   if (request.files['file']): 
-    file = request.files['file']
-    model = VGG16(weights='imagenet')
     
+    # access image file 
+    file = request.files['file']
+    
+    # access user input
+    # word = request.form.get("word")
+    
+    
+    # model 1
+    model = VGG16(weights='imagenet')
+  
     original_image = Image.open(file)
     original_image = original_image.convert('RGB')
     original_image = original_image.resize((224, 224), Image.NEAREST)
@@ -37,9 +46,18 @@ def process():
     features = model.predict(x)
     p = decode_predictions(features, top=1)
     # prediction[0][0][1] is eqaul to the first batch, top prediction and class_description
-    result = str(p[0][0][1])
+    result1 = str(p[0][0][1])
     
-    return jsonify(result = result, status = 200)
+    #model 2
+    
+    
+    
+    #model 3
+    
+    
+    #model 4
+    
+    return jsonify(result1 = result1, status = 200)
   else:
     return jsonify(result = "something wrong", status = 500)
 
