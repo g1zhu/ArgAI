@@ -3,9 +3,6 @@ import {  Row, Typography } from "antd";
 import "antd/dist/antd.css";
 import Col from "antd/es/grid/col";
 
-// import "./index.css";
-// import menu from "antd/lib/menu";
-
 const Dashboard = () => {
   return (
     <div>

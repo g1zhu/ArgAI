@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { DashboardPage } from "./Dashboard";
 import { MapPage } from "./Map";
-import { ResourcePage } from "./Resource";
+import { DiseasePage } from "./Disease";
 import { SolutionPage } from "./Solution";
 
 
@@ -13,7 +13,7 @@ const CustomerRootPage = ({ customer }: { customer: string }) => {
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/map" element={<MapPage />} />
         <Route path="/solution" element={<SolutionPage />} />
-        <Route path="/resource" element={<ResourcePage />} />
+        <Route path="/disease" element={<DiseasePage />} />
 
         <Route path="*" element={<DashboardPage />} />
       </Routes>

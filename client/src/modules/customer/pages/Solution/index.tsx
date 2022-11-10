@@ -1,63 +1,43 @@
 import {
   Row,
   Layout,
-  Form,
   Button,
   Col,
-  Upload,
   Typography,
-  Select,
+  Skeleton,
+  Image,
+  Modal,
   Divider,
-  InputNumber,
 } from "antd";
 import "antd/dist/antd.css";
-import { PlusCircleOutlined, UploadOutlined } from "@ant-design/icons";
-import type { RcFile, UploadFile, UploadProps } from "antd/es/upload/interface";
+import { UploadOutlined } from "@ant-design/icons";
+import type { UploadProps } from "antd/es/upload/interface";
 import { useState, useEffect } from "react";
 import { withCustomerLayout } from "../../../layout/Customer.layout";
-
-// import "./index.css";
-// import menu from "antd/lib/menu";
-
-const { Option } = Select;
-
-// const layout = {
-//   labelCol: { span: 8 },
-//   wrapperCol: { span: 16 },
-// };
-// const tailLayout = {
-//   wrapperCol: { offset: 8, span: 16 },
-// };
+import Dragger from "antd/lib/upload/Dragger";
 
 const Solution = () => {
-  const [form] = Form.useForm();
-
-  const { Header, Content, Footer } = Layout;
+  const { Header, Content } = Layout;
 
   const [ok, setok] = useState<boolean>(false);
-  const [reponse, setResponse] = useState<any>();
-  const [isloading, setloading] = useState<boolean>(false);
+  const [response, setResponse] = useState<{ crop: string } | null>(null);
 
-  const [selectedImg, setImage] = useState<
-    string | ArrayBuffer | null | undefined
-  >(null);
+  const [open, setOpen] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+
+  const showModal = () => {
+    setOpen(true);
+  };
+
+  const handleCancel = () => {
+    setOpen(false);
+  };
+
   const [selectedImgFile, selectImage] = useState<File>();
 
   const handleUpload = (file: File) => {
-    console.log("file", file);
     selectImage(file);
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      setImage(e.target?.result);
-    };
-    reader.readAsDataURL(file as Blob);
-
     return false;
-  };
-
-  const onReset = () => {
-    form.resetFields();
   };
 
   const props: UploadProps = {
@@ -69,230 +49,306 @@ const Solution = () => {
 
   useEffect(() => {
     if (ok && selectedImgFile) {
-      console.log("i am here");
-      form
-        .validateFields()
-        .then((values) => {
-          console.log(values.drought_probability);
-          setloading(true);
-          const formData = new FormData();
+      setConfirmLoading(true);
+      const formData = new FormData();
+      formData.append("file", selectedImgFile, selectedImgFile.name);
 
-          formData.append("file", selectedImgFile, selectedImgFile.name);
-          formData.append("drought_probability", values.drought_probability);
-          formData.append("drought_extent", values.drought_extent);
-          formData.append("growth_sowing", values.growth_sowing);
-          formData.append("growth_vegetative", values.growth_vegetative);
-          formData.append("growth_flowering", values.growth_flowering);
-          formData.append("growth_maturity", values.growth_maturity);
-          formData.append("disturbance_none", values.disturbance_none);
-          formData.append("disturbance_weeds", values.disturbance_weeds);
-          formData.append("disturbance_drought", values.disturbance_drought);
-          formData.append(
-            "disturbance_nutrient_deficit",
-            values.disturbance_nutrient_deficit
-          );
-
-          fetch("/process", {
-            method: "POST",
-            body: formData,
-          })
-            .then((res) => res.json())
-            .then((data) => {
-              setResponse(data);
-              setok(false);
-              setloading(false);
-            });
-        })
-        .catch((info) => {});
+      fetch("/process", {
+        method: "POST",
+        body: formData,
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setResponse(data);
+          setok(false);
+          setOpen(false);
+          setConfirmLoading(false);
+        });
     }
-  }, [form, ok, reponse, selectedImgFile]);
+  }, [ok, selectedImgFile]);
 
   return (
     <Layout style={{ flex: "center" }}>
       <Header style={{ background: "none" }}></Header>
       <Content
         style={{
-          alignSelf: "center",
+          // alignSelf: "center",
           flex: "unset",
-          margin: "auto 0",
+          margin: "0 2rem 6rem",
+          textAlign: "left",
         }}
       >
-        <Typography.Title>Process Image</Typography.Title>
-        {reponse && (
+        <>
+          {/* page header */}
           <Row>
-            <Typography>{reponse.result1}</Typography>
-          </Row>
-        )}
-
-        <Row>
-          <Col span={6}></Col>
-          <Col span={10}>
-            <Form
-              form={form}
-              name="control-hooks"
-              colon={false}
-              // labelCol={{ span: 9 }}
-              // labelAlign="right"
-              // labelWrap={true}
-              // wrapperCol={{ span: 6 }}
-              layout="horizontal"
+            <Col span={12}>
+              <Typography.Title level={1}>
+                ArgAI: Data Driven Solution
+              </Typography.Title>
+            </Col>
+            <Col span={12}>
+              <Button
+                size="large"
+                type="primary"
+                icon={<UploadOutlined />}
+                onClick={() => {
+                  showModal();
+                  setResponse(null);
+                }}
+              >
+                Upload An Image
+              </Button>
+            </Col>
+            <Modal
+              title="The Simplest Way to Find Which Crop to Grow"
+              open={open}
+              okText="Upload"
+              onOk={() => {
+                setConfirmLoading(true);
+                setok(true);
+              }}
+              confirmLoading={confirmLoading}
+              onCancel={handleCancel}
             >
-              <Row gutter={[24, 0]}>
-                <Col span={24}>
-                  <Form.Item
-                    name="drought_probability"
-                    label="Drought Probability"
-                  >
-                    <InputNumber
-                      placeholder="Drought Probability"
-                      style={{ width: "100%" }}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col span={24}>
-                  <Form.Item
-                    name="drought_extent"
-                    label="Drought Extent"
-                    rules={
-                      [
-                        // () => ({
-                        //   validator(_, value) {
-                        //     if (
-                        //       !value ||
-                        //       value.length < 8 ||
-                        //       value.toUpperCase() === value ||
-                        //       value.toLowerCase() === value ||
-                        //       !/\d/.test(value)
-                        //     ) {
-                        //       return Promise.reject(
-                        //         new Error(
-                        //           "special characters"
-                        //         )
-                        //       );
-                        //     }
-                        //     return Promise.resolve();
-                        //   },
-                        // }),
-                      ]
-                    }
-                  >
-                    <InputNumber
-                      placeholder="Draught Extent"
-                      style={{ width: "100%" }}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col span={24}>
-                  <Form.Item name="growth_sowing" label="Growth Sowing">
-                    <InputNumber
-                      placeholder="Growth Sowing"
-                      style={{ width: "100%" }}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col span={24}>
-                  <Form.Item name="growth_vegetative" label="Growth Vegetative">
-                    <InputNumber
-                      placeholder="Growth Vegetative"
-                      style={{ width: "100%" }}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col span={24}>
-                  <Form.Item name="growth_flowering" label="Growth Flowering">
-                    <InputNumber
-                      placeholder="Growth Flowering"
-                      style={{ width: "100%" }}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col span={24}>
-                  <Form.Item name="growth_maturity" label="Growth Maturity">
-                    <InputNumber
-                      placeholder="Growth Maturity"
-                      style={{ width: "100%" }}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col span={24}>
-                  <Form.Item name="disturbance_none" label="Distribution None">
-                    <InputNumber
-                      placeholder="Growth Flowering"
-                      style={{ width: "100%" }}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col span={24}>
-                  <Form.Item
-                    name="disturbance_weeds"
-                    label="Distribution Weeds"
-                  >
-                    <InputNumber
-                      placeholder="Distribution Weeds"
-                      style={{ width: "100%" }}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col span={24}>
-                  <Form.Item
-                    name="disturbance_drought"
-                    label="Disturbance Drought"
-                  >
-                    <InputNumber
-                      placeholder="Disturbance Drought"
-                      style={{ width: "100%" }}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col span={24}>
-                  <Form.Item
-                    name="disturbance_nutrient_deficit"
-                    label="Disturbance Nutrient Deficit"
-                  >
-                    <InputNumber
-                      placeholder="Disturbance Nutrient Deficit"
-                      style={{ width: "100%" }}
-                    />
-                  </Form.Item>
-                </Col>
+              <Dragger {...props} style={{ textAlign: "center" }}>
+                <UploadOutlined style={{ fontSize: "60px" }} />
+                <p>Click or drag a single file to this area to upload</p>
+                <p>PNG, JPEG, SVG, JPG files are allowed</p>
+              </Dragger>
+            </Modal>
+          </Row>
 
-                <Divider />
+          {/* start body */}
+          <Row gutter={[16, 24]}>
+            {/* left image */}
+            <Col span={10}>
+              {!response && (
+                <Image fallback="Image Failed" src={"/placeholder.png"} />
+              )}
+              {response?.crop === "Maize" && (
+                <Image fallback="Image Failed" src={"/maize.jpeg"} />
+              )}
+              {response?.crop === "Sorghum" && (
+                <Image fallback="Image Failed" src={"/sorghum.jpeg"} />
+              )}
+              {response?.crop === "Green Gram" && (
+                <Image fallback="Image Failed" src={"/greengram.jpeg"} />
+              )}
+              {response?.crop === "Soybean" && (
+                <Image fallback="Image Failed" src={"/soybean.jpeg"} />
+              )}
+            </Col>
 
-                <Col span={24}>
-                  <Form.Item name="image">
-                    <Upload {...props} listType="picture">
-                      <Button icon={<UploadOutlined />}>Upload Image</Button>
-                    </Upload>
-                    {/* <Button onClick={() => setok(true)}>submit</Button> */}
-                  </Form.Item>
-                </Col>
+            <Col span={2} style={{ textAlign: "center" }}>
+              <Divider
+                type="vertical"
+                style={{ height: "100%", borderColor: "#FFF" }}
+              />
+            </Col>
 
-                <Divider />
-                <Col span={24}>
-                  <Form.Item>
+            {/* right body */}
+            {response && (
+              <Col span={12}>
+                <Row>
+                  <Typography.Title level={2}>
+                    The BEST SUITABLE Crop to grow is
+                  </Typography.Title>
+                </Row>
+                <Row>
+                  <Typography.Title level={3} style={{ color: "#446B7B" }}>
+                    {response.crop}
+                  </Typography.Title>
+                </Row>
+                <Row>
+                  <Typography.Title level={5}>
+                    Brief Introduction:
+                  </Typography.Title>
+                </Row>
+                <Row>
+                  {response.crop === "Maize" && (
+                    <Typography.Paragraph>
+                      Maize, also known as corn (North American and Australian
+                      English) is one of the most important cereals both for
+                      human and animal consumption and is grown for grain and
+                      forage. Present world production is about 594 million tons
+                      of grain from about 139 million ha.
+                    </Typography.Paragraph>
+                  )}
+                  {response.crop === "Sorghum" && (
+                    <Typography.Paragraph>
+                      Sorghum (Sorghum bicolor) appears to have been
+                      domesticated in Ethiopia about 5000 years ago. Present
+                      world production is about 58 million tons grain from 42.6
+                      million ha.
+                    </Typography.Paragraph>
+                  )}
+                  {response.crop === "Green Gram" && (
+                    <Typography.Paragraph>
+                      Maize, also known as corn (North American and Australian
+                      English) is one of the most important cereals both for
+                      human and animal consumption and is grown for grain and
+                      forage. Present world production is about 594 million tons
+                      of grain from about 139 million ha.
+                    </Typography.Paragraph>
+                  )}
+                  {response.crop === "Soybean" && (
+                    <Typography.Paragraph>
+                      Soybean (Glycine max) is one of the most important world
+                      crops and is grown for oil and protein. Present world
+                      production is about 176.6 million tons of beans over 75.5
+                      million ha.
+                    </Typography.Paragraph>
+                  )}
+                </Row>
+                <Row>
+                  <Typography.Title level={5}>Climate:</Typography.Title>
+                </Row>
+                <Row>
+                  {response.crop === "Maize" && (
+                    <Typography.Paragraph>
+                      This crop is grown in climates ranging from temperate to
+                      tropic during the period when mean daily temperatures are
+                      above 15°C and frost-free.
+                    </Typography.Paragraph>
+                  )}
+                  {response.crop === "Sorghum" && (
+                    <Typography.Paragraph>
+                      Optimum temperatures for high producing varieties are over
+                      25°C.
+                    </Typography.Paragraph>
+                  )}
+                  {response.crop === "Green Gram" && (
+                    <Typography.Paragraph>
+                      Maize, also known as corn (North American and Australian
+                      English) is one of the most important cereals both for
+                      human and animal consumption and is grown for grain and
+                      forage. Present world production is about 594 million tons
+                      of grain from about 139 million ha.
+                    </Typography.Paragraph>
+                  )}
+                  {response.crop === "Soybean" && (
+                    <Typography.Paragraph>
+                      The crop is grown under warm conditions in the tropics,
+                      subtropics and temperate climates. Soybean is relatively
+                      resistant to low and very high temperatures but growth
+                      rates decrease above 35°C and below 18°C.
+                    </Typography.Paragraph>
+                  )}
+                </Row>
+                <Row>
+                  <Typography.Title level={5}>
+                    Water Requirement:
+                  </Typography.Title>
+                </Row>
+                <Row>
+                  {response.crop === "Maize" && (
+                    <Typography.Paragraph>
+                      For maximum production, a medium-maturity grain crop
+                      requires between 500 and 800 mm of water depending on
+                      climate.
+                    </Typography.Paragraph>
+                  )}
+                  {response.crop === "Sorghum" && (
+                    <Typography.Paragraph>
+                      For high production crop water requirements (ETm) of 110
+                      to 130 day sorghum are between 450 and 650 mm depending on
+                      the climate.
+                    </Typography.Paragraph>
+                  )}
+                  {response.crop === "Green Gram" && (
+                    <Typography.Paragraph>
+                      Maize, also known as corn (North American and Australian
+                      English) is one of the most important cereals both for
+                      human and animal consumption and is grown for grain and
+                      forage. Present world production is about 594 million tons
+                      of grain from about 139 million ha.
+                    </Typography.Paragraph>
+                  )}
+                  {response.crop === "Soybean" && (
+                    <Typography.Paragraph>
+                      Water requirements (ETm) for maximum production vary
+                      between 450 and 700 mm/ season depending on climate and
+                      length of growing period.
+                    </Typography.Paragraph>
+                  )}
+                </Row>
+                <Row>
+                  <Typography.Title level={5}>Yield:</Typography.Title>
+                </Row>
+                <Row>
+                  {response.crop === "Maize" && (
+                    <Typography.Paragraph>
+                      Under irrigation, a good commercial grain yield is 6 to 9
+                      tons/ha (10 to 13 percent moisture).
+                    </Typography.Paragraph>
+                  )}
+                  {response.crop === "Sorghum" && (
+                    <Typography.Paragraph>
+                      A good yield under irrigation is 3.5 to 5 ton/ha (12 to 15
+                      percent moisture).
+                    </Typography.Paragraph>
+                  )}
+                  {response.crop === "Green Gram" && (
+                    <Typography.Paragraph>
+                      Maize, also known as corn (North American and Australian
+                      English) is one of the most important cereals both for
+                      human and animal consumption and is grown for grain and
+                      forage. Present world production is about 594 million tons
+                      of grain from about 139 million ha.
+                    </Typography.Paragraph>
+                  )}
+                  {response.crop === "Soybean" && (
+                    <Typography.Paragraph>
+                      Under rainfed conditions, good soybean yields vary between
+                      1.5 and 2.5 ton/ha seed.
+                    </Typography.Paragraph>
+                  )}
+                </Row>
+                <Row>
+                  <Typography.Title level={5}>Source:</Typography.Title>
+                  {response.crop === "Maize" && (
                     <Button
-                      type="primary"
-                      htmlType="submit"
-                      onClick={() => setok(true)}
+                      type="link"
+                      href="https://www.fao.org/land-water/databases-and-software/crop-information/maize/en/"
                     >
-                      Submit
+                      "https://www.fao.org/land-water/databases-and-software/crop-information/maize/en/"
                     </Button>
-                    <Button htmlType="button" onClick={onReset}>
-                      Reset
+                  )}
+                  {response.crop === "Sorghum" && (
+                    <Button
+                      type="link"
+                      href="https://www.fao.org/land-water/databases-and-software/crop-information/sorghum/en/"
+                    >
+                      "https://www.fao.org/land-water/databases-and-software/crop-information/sorghum/en/"
                     </Button>
-                  </Form.Item>
-                </Col>
-              </Row>
-            </Form>
-          </Col>
-          <Col span={6}></Col>
-        </Row>
+                  )}
+                  {response.crop === "Green Gram" && (
+                    <Button
+                      type="link"
+                      href="https://www.fao.org/land-water/databases-and-software/crop-information/maize/en/"
+                    >
+                      "https://www.fao.org/land-water/databases-and-software/crop-information/maize/en/"
+                    </Button>
+                  )}
+                  {response.crop === "Soybean" && (
+                    <Button
+                      type="link"
+                      href="https://www.fao.org/land-water/databases-and-software/crop-information/soybean/en/"
+                    >
+                      https://www.fao.org/land-water/databases-and-software/crop-information/soybean/en/
+                    </Button>
+                  )}
+                </Row>
+              </Col>
+            )}
+            {!response && (
+              <Col span={12}>
+                <Skeleton avatar paragraph={{ rows: 12 }} />
+              </Col>
+            )}
+          </Row>
+        </>
       </Content>
-      {/* <Footer
-        style={{ textAlign: "center", background: "none" }}
-      >
-        ©ArgAI Group. All rights reserved {moment().year()}.
-      </Footer> */}
     </Layout>
   );
 };

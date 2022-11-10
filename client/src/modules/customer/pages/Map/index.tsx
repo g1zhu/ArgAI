@@ -14,12 +14,12 @@ const Map = () => {
       <Content
         style={{
           flex: "unset",
-          margin: "auto 0",
+          margin: "0 10rem",
         }}
       >
         <div>
-          <Typography.Title>World CPI Inflation Heat Map</Typography.Title>
-          <MapChart setTooltipContent={setContent}/>
+          <Typography.Title>Food and Non-alcoholic CPI Inflation Heatmap</Typography.Title>
+          <MapChart setTooltipContent={setContent} />
           <ReactTooltip multiline={true} html={true}>
             {content}
           </ReactTooltip>
