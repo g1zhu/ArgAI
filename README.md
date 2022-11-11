@@ -25,19 +25,19 @@ This is xxxxxxxxxx
 ## Flask Backend Usage
 - In the root directory(crop/), create your environment 
  ```shell
-       
+       download flask 
  ```
  - Activate your environment 
  ```shell
-       
+       . venv/bin/activate
  ```
  - Install all requirements
  ```shell
-       
+       none
  ```
  - Run the following command to run the code in development mode
 ```shell
-       flask run
+       flask --app unbigdata_backend run
  ```
  
  - Enjoy!!!!
