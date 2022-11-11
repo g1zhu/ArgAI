@@ -56,7 +56,7 @@ const Disease = () => {
       const formData = new FormData();
       formData.append("file", selectedImgFile, selectedImgFile.name);
 
-      fetch("/process", {
+      fetch("/disease", {
         method: "POST",
         body: formData,
       })
@@ -124,13 +124,13 @@ const Disease = () => {
           <Row gutter={[16, 24]}>
             {/* left image */}
             <Col span={10}>
-              {!response  && (
+              {!response && (
                 <Image fallback="Image Failed" src={"/placeholder.png"} />
               )}
-              {response?.disease === "Healthy"  && (
+              {response?.disease === "Healthy" && (
                 <Image fallback="Image Failed" src={"/congrat.webp"} />
               )}
-              
+
               {response?.disease === "Potato Early Blight" && (
                 <Image
                   fallback="Image Failed"
@@ -329,15 +329,15 @@ const Disease = () => {
                       )}
                       {response.disease ===
                         "Tomato Two Spotted Spider Mites" && (
-                        <Typography.Paragraph>
-                          Generally, mites feed on the undersides of leaves.
-                          They use their sucking mouthparts to remove sap from
-                          plants, giving the upper leaf surface a speckled or
-                          mottled appearance. Leaves of mite-infested plants may
-                          turn yellow and dry up, and plants may lose vigor and
-                          die when infestations are severe.
-                        </Typography.Paragraph>
-                      )}
+                          <Typography.Paragraph>
+                            Generally, mites feed on the undersides of leaves.
+                            They use their sucking mouthparts to remove sap from
+                            plants, giving the upper leaf surface a speckled or
+                            mottled appearance. Leaves of mite-infested plants may
+                            turn yellow and dry up, and plants may lose vigor and
+                            die when infestations are severe.
+                          </Typography.Paragraph>
+                        )}
                       {response.disease === "Tomato Septoria Leaf Spot" && (
                         <Typography.Paragraph>
                           Septoria leaf spot, also called Septoria blight,
@@ -457,13 +457,13 @@ const Disease = () => {
                       )}
                       {response.disease ===
                         "Tomato Two Spotted Spider Mites" && (
-                        <Button
-                          type="link"
-                          href="https://entomology.ca.uky.edu/ef310"
-                        >
-                          https://entomology.ca.uky.edu/ef310
-                        </Button>
-                      )}
+                          <Button
+                            type="link"
+                            href="https://entomology.ca.uky.edu/ef310"
+                          >
+                            https://entomology.ca.uky.edu/ef310
+                          </Button>
+                        )}
                       {response.disease === "Tomato Septoria Leaf Spot" && (
                         <Button
                           type="link"
